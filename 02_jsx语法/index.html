@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JSX 语法</title>
+    <style>
+        .title {
+            background-color: orange;
+            width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div id="test">
+
+    </div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        const id = "tItLe"
+        const content = "JSX Synax"
+        /*
+            1. 虚拟 DOM 定义不需要引号，用括号包裹
+            2. 使用 {} 进行变量引用
+            3. 指定 css 使用 className 而不是 class
+            4. style 内联样式使用 {{}}，外层 {} 表示 React 变量引用，内部 {} 表示一个对象，多单词样式使用驼峰
+            5. 虚拟 DOM 内只能有一个根标签，其他所有标签都必须嵌套在根标签内部
+            6. 所有标签必须闭合
+            7. 小写开头的标签，React 自动映射同名 HTML 标签，找不到同名标签则报错；大写开头的标签表示组件。
+        */
+        const VDOM = (
+            <div>
+                <h2 id={id.toLowerCase()} className="title" style={{color: 'blue', fontSize: 32}}>
+                    <span>{content}</span>
+                </h2>
+
+                <h2 id={id} className="title" style={{color: 'green', fontSize: 32}}>
+                    <span>{content}</span>
+                </h2>
+
+                <input type="text" />
+            </div>
+        )
+        ReactDOM.render(VDOM, document.getElementById("test"))
+    </script>
+</body>
+</html>
