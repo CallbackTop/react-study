@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React 组件</title>
+</head>
+<body>
+    <div id="test">
+
+    </div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 使用函数定义组件，适用于简单组件
+        function Demo(){
+            return <h1>函数式组件</h1>
+        }
+        
+        // 使用类定义组件，适用于复杂组件
+        class Demo2 extends React.Component {
+            render() {
+                return (
+                    <h1>类式组件</h1>
+                )
+            }
+        }
+
+        // 使用标签渲染，标签名称就是函数名称，首字母必须大写
+        ReactDOM.render(<Demo2/>, document.getElementById("test"))
+    </script>
+</body>
+</html>

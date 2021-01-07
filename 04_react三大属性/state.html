@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React State</title>
+</head>
+<body>
+    <div id="test">
+
+    </div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        class Weather extends React.Component {
+            constructor(props) {
+                super(props)
+                this.state = {isHot: true}
+                // 这里使用 bind 函数将 change 的 this 指向 Weather 的实例，否则其默认是 undefined
+                // bind 会返回新的函数
+                this.changeWeather = this.change.bind(this)
+            }
+            render() {
+                // 这里 onClick 要调用修改了 this 指向的函数
+                return <h3 onClick={this.changeWeather}>今天天气很{this.state.isHot ? '热' : '冷'}</h3>
+            }
+            change() {
+                // 这里的 this 是 undefined，因为在类方法里，指向 window 的 this 会被替换为 undefined
+                // 必须在构造器内部通过 bind 函数修改 this 指向
+                this.setState({isHot: !this.state.isHot})
+            }
+        }
+        ReactDOM.render(<Weather/>, document.getElementById("test"))
+    </script>
+</body>
+</html>
