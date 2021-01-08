@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React 受控组件</title>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        class Login extends React.Component {
+            state = {
+                username: '',
+                password: ''
+            }
+
+            // 为了在标签上使用函数时传递参数，将函数返回值变为另外一个函数（柯里化）
+            // 否则 JSX 在被解析时函数就会被调用，之后就不能再被调用了。因为函数的返回值被赋给了事件，而不是函数本身。
+            saveFormData = (dataType) => {
+                return (event) => {
+                    this.setState({
+                        [dataType]: event.target.value
+                    })
+                }
+            }
+
+            // 非柯里化函数
+            saveFormData2 = (dataType, value) => {
+                this.setState({
+                    [dataType]: value
+                })
+            }
+
+            handleLogin = (event) => {
+                event.preventDefault()
+                const {username, password} = this.state
+                alert(`用户名：${username}，密码：${password}`)
+            }
+            render() {
+                return (
+                    <form onSubmit={this.handleLogin}>
+                        {/* saveFormData() 可以传参是因为函数本身返回了另外一个函数 */}
+                        用户名：<input onChange={this.saveFormData('username')} type="text" name="username" />&nbsp;
+                        
+                        {/* 这里使用非柯里化的方式调用函数，一次性传入2个值 */}
+                        密码：<input onChange={ event => this.saveFormData2('password', event.target.value) } type="password" name="password" />&nbsp;
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+
+        ReactDOM.render(<Login/>, document.getElementById("test"))
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React 受控组件</title>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        // 受控组件就是实现了双向绑定
+        // React 不支持双向绑定，需要通过 onChange 等事件来实现
+        class Login extends React.Component {
+            state = {
+                username: '',
+                password: ''
+            }
+
+            saveUsername = (event) => {
+                this.setState({
+                    username: event.target.value
+                })
+            }
+
+            savePassword = (event) => {
+                this.setState({
+                    password: event.target.value
+                })
+            }
+
+            handleLogin = (event) => {
+                event.preventDefault()
+                const {username, password} = this.state
+                alert(`用户名：${username}，密码：${password}`)
+            }
+            render() {
+                return (
+                    <form onSubmit={this.handleLogin}>
+                        用户名：<input onChange={this.saveUsername} type="text" name="username" />&nbsp;
+                        密码：<input onChange={this.savePassword} type="password" name="password" />&nbsp;
+                        <button>登录</button>
+                    </form>
+                )
+            }
+        }
+
+
+        ReactDOM.render(<Login/>, document.getElementById("test"))
+    </script>
+</body>
+</html>

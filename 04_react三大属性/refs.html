@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React Refs</title>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        class Demo extends React.Component {
+            // 创建一个容器来绑定标签，一个容器只能绑定一个标签。
+            btnRef = React.createRef()
+            showLeft = () => {
+                const input = this.refs.left
+                alert(input.value)
+                console.log(this.btnRef)
+            }
+            showRight = () => {
+                const input = this.right
+                alert(input.value)
+            }
+            render() {
+                return (
+                    <div>
+                        {/* ref="xxx" 以字符串形式绑定标签，不推荐使用，存在效率问题 */}
+                        <input ref="left" type="text" />&nbsp;
+                        {/* 通过 React.createRef() API 创建容器绑定标签，一个容器只能绑定一个标签 */}
+                        <button ref={this.btnRef} onClick={this.showLeft}>点我显示左边信息</button>&nbsp;
+                        {/* 使用内联回调函数绑定标签，推荐使用。但是在组件 update 时会调用两次，第一次接收到的参数为 null */}
+                        {/* 这是因为 React 会做一次清空操作，但是这并没有什么影响 */}
+                        {/* 实在想避免调用两次的问题，可以把回调函数写在 class 里 */}
+                        <input onBlur={this.showRight} ref={c => this.right = c} type="text" />
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(<Demo/>, document.getElementById("test"))
+    </script>
+</body>
+</html>
