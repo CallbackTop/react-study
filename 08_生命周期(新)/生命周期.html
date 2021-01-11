@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React 生命周期</title>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script type="text/javascript" src="../js/17.0.1/react.development.js"></script>
+    <script type="text/javascript" src="../js/17.0.1/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/17.0.1/prop-types.js"></script>
+    <script type="text/javascript" src="../js/17.0.1/babel.min.js"></script>
+
+    <script type="text/babel">
+        class Counter extends React.Component {
+            
+            constructor(props) {
+                console.log("Counter --- constructor")
+                super(props)
+                this.state = {
+                    count: 0
+                }
+            }
+
+            add = () => {
+                let {count} = this.state
+                count += 1
+                this.setState({count})
+            }
+
+            kill = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById("test"))
+            }
+
+            force = () => {
+                this.forceUpdate()
+            }
+
+            /*
+                此方法使用场景极其罕见，只有在要求 state 的值永远取决于 props 时才会使用
+                也就是说，该方法返回的对象会被当做是 state 使用，并且无法更改。
+                只有在返回 null 时才不影响原来的 state
+
+                参数 props 表示传入的标签属性
+                参数 state 表示组件本身的 state
+            */
+            static getDerivedStateFromProps(props, state) {
+                console.log("Counter --- getDerivedStateFromProps", props)
+                return {}
+            }
+
+            componentDidMount() {
+                console.log("Counter --- componentDidMount")
+            }
+
+            shouldComponentUpdate() {
+                console.log("Counter --- shouldComponentUpdate")
+                return true
+            }
+
+            /*
+                这个方法的返回值可以被 componentDidUpdate() 钩子接收
+                通常用于在发生更新前获取一些数据，比如滚动条位置，列表高度
+                因为组件更新后，之前的数据就不存在了，这里的快照就是保留更新前组件信息
+            */
+            getSnapshotBeforeUpdate() {
+                console.log("Counter --- getSnapshotBeforeUpdate")
+                return 'tom&jerry'
+            }
+
+            /*
+                prevProps 更新前的 props
+                prevState 更新前的 state
+                snapshot  getSnapshotBeforeUpdate() 返回值
+            */
+            componentDidUpdate(prevProps, prevState, snapshot) {
+                console.log("Counter --- componentDidUpdate", prevProps, prevState, snapshot)
+            }
+
+            componentWillUnmount() {
+                console.log("Counter --- componentWillUnmount")
+            }
+
+            render() {
+                console.log("Counter --- render")
+                return (
+                    <div>
+                        <h2>Sum：{this.state.count}</h2>
+                        <button onClick={this.add}>加一</button>
+                        <button onClick={this.kill}>卸载</button>
+                        <button onClick={this.force}>强制更新</button>
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(<Counter/>, document.getElementById("test"))
+    </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React 生命周期</title>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        /*
+            setState() 流程：
+                shouldComponentUpdate() -> componentWillUpdate() -> componentDidUpdate() 
+                shouldComponentUpdate() 必须返回 true，之后的流程才会生效，数据也才能变更。
+            forceUpdate() 流程：
+                componentWillUpdate() -> componentDidUpdate()
+                不受 shouldComponentUpdate() 是否允许的影响
+        */
+        class Counter extends React.Component {
+            
+            constructor(props) {
+                console.log("Counter --- constructor")
+                super(props)
+                this.state = {
+                    count: 0
+                }
+            }
+
+            add = () => {
+                let {count} = this.state
+                count += 1
+                this.setState({count})
+            }
+
+            kill = () => {
+                ReactDOM.unmountComponentAtNode(document.getElementById("test"))
+            }
+
+            force = () => {
+                this.forceUpdate()
+            }
+
+            componentWillMount() {
+                console.log("Counter --- componentWillMount")
+            }
+
+            componentDidMount() {
+                console.log("Counter --- componentDidMount")
+            }
+
+            shouldComponentUpdate() {
+                console.log("Counter --- shouldComponentUpdate")
+                return true
+            }
+
+            componentWillUpdate() {
+                console.log("Counter --- componentWillUpdate")
+            }
+
+            /*
+                prevProps 更新前的 props
+                prevState 更新前的 state
+            */
+            componentDidUpdate(prevProps, prevState) {
+                console.log("Counter --- componentDidUpdate", prevProps, prevState)
+            }
+
+            componentWillUnmount() {
+                console.log("Counter --- componentWillUnmount")
+            }
+
+            render() {
+                console.log("Counter --- render")
+                return (
+                    <div>
+                        <h2>Sum：{this.state.count}</h2>
+                        <button onClick={this.add}>加一</button>
+                        <button onClick={this.kill}>卸载</button>
+                        <button onClick={this.force}>强制更新</button>
+                    </div>
+                )
+            }
+        }
+        ReactDOM.render(<Counter/>, document.getElementById("test"))
+    </script>
+</body>
+</html>

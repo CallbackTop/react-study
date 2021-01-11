@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>React 父子组件生命周期</title>
+</head>
+<body>
+    <div id="test"></div>
+
+    <script type="text/javascript" src="../js/react.development.js"></script>
+    <script type="text/javascript" src="../js/react-dom.development.js"></script>
+    <script type="text/javascript" src="../js/prop-types.js"></script>
+    <script type="text/javascript" src="../js/babel.min.js"></script>
+
+    <script type="text/babel">
+        
+        class A extends React.Component {
+            state = {
+                flag: true,
+                word: '哈喽'
+            }
+
+            changeCarName = () => {
+                this.setState({
+                    flag: !this.state.flag
+                })
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h3>组件A</h3>
+                        <button onClick={this.changeCarName}>变更车辆名称</button>
+                        <B carName={this.state.flag ? '奔驰' : '宝马'} flag={this.state.flag} word={this.state.word}/>
+                    </div>
+                )
+            }
+        }
+
+        /*
+            父组件向子组件传递数据时触发 componentWillReceiveProps() 生命周期
+
+            该函数接收所有传入的参数（不仅仅是被改变了的参数），之后走 setState() 流程
+        */
+        class B extends React.Component {
+
+            componentWillReceiveProps(props) {
+                console.log("B --- componentWillReceiveProps", props)
+            }
+
+            shouldComponentUpdate() {
+                console.log("B --- shouldComponentUpdate")
+                return true
+            }
+
+            componentWillUpdate() {
+                console.log("B --- componentWillUpdate")
+            }
+
+            componentDidUpdate() {
+                console.log("B --- componentDidUpdate")
+            }
+
+            render() {
+                return (
+                    <div>
+                        <h3>组件B</h3>
+                        <h3>{this.props.carName}</h3>
+                    </div>
+                )
+            }
+        }
+
+
+        ReactDOM.render(<A/>, document.getElementById("test"))
+    </script>
+</body>
+</html>
