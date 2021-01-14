@@ -48,6 +48,26 @@ export default class App extends Component {
     })
   }
 
+  removeDone = () => {
+    const {todos} = this.state
+    const newTodos = todos.filter((todo) => {
+      return !todo.checked
+    })
+    this.setState({
+      todos: newTodos
+    })
+  }
+
+  selectAll = (checked) => {
+    const {todos} = this.state
+    const newTodos = todos.map((todo) => {
+      return {...todo, checked}
+    })
+    this.setState({
+      todos: newTodos
+    })
+  }
+
   render() {
     const {todos} = this.state
     return (
@@ -56,7 +76,7 @@ export default class App extends Component {
           {/* 通过 props 传递一个函数给子组件，从而获得子组件的数据 */}
           <Header addItem={this.addItem}/>
           <List todos={todos} changeItem={this.changeItem} removeItem={this.removeItem}/>
-          <Footer/>
+          <Footer todos={todos} removeDone={this.removeDone} selectAll={this.selectAll} />
         </div>
       </div>
     )

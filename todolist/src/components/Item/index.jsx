@@ -27,8 +27,9 @@ export default class Item extends Component {
 
   handleRemove = (id) => {
     return () => {
-      console.log(id)
-      this.props.removeItem(id)
+      if (window.confirm('确定删除?')) {
+        this.props.removeItem(id)
+      }
     }
   }
 
@@ -40,7 +41,7 @@ export default class Item extends Component {
           onMouseEnter={this.handleMouse(true)} 
           onMouseLeave={this.handleMouse(false)}>
         <label>
-          <input type="checkbox" defaultChecked={checked} onChange={this.changeItem(id)}/>
+          <input type="checkbox" checked={checked} onChange={this.changeItem(id)}/>
           <span>{name}</span>
         </label>
         <button onClick={this.handleRemove(id)} className="btn btn-danger" style={{display: mouseEnter ? 'block' : 'none'}}>删除</button>
