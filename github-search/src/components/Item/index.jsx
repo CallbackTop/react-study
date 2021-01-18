@@ -3,12 +3,13 @@ import './index.css'
 
 export default class Item extends Component {
   render() {
+    const {avatar_url, html_url, login} = this.props
     return (
       <div className="card">
-        <a rel="noreferrer" href="https://github.com/reactjs" target="_blank">
-          <img alt="avatar" src="https://assets.callback.top/callback_logo.png" style={{width: '100px'}}/>
+        <a rel="noreferrer" href={html_url} target="_blank">
+          <img alt="avatar" src={avatar_url} style={{width: '100px'}}/>
         </a>
-        <p className="card-text">reactjs</p>
+        <p className="card-text">{login}</p>
       </div>
     )
   }
