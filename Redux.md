@@ -75,7 +75,7 @@ export const CalculatorActionType = {
 }
 ```
 
-通常全局只需要一份常量文件，所以最好按照不同组件创建对象进行维护，避免出现不同组件之间重名的情况，也避免维护的使用看着满屏的常量懵逼。常量名和对应的值随便写，你自己看得懂又不会被合作的同事打就行。
+通常全局只需要一份常量文件，所以最好按照不同组件创建对象进行维护，避免出现不同组件之间重名的情况，也避免维护的时候看着满屏的常量懵逼。常量名和对应的值随便写，你自己看得懂又不会被合作的同事打死就行。
 
 接下来是创建 Action Creator 来生成不同的 Action，实际上就是在一个 JS 文件里面写一堆函数生成 Action 对象。
 
@@ -127,9 +127,10 @@ export default createStore(calculatorReducer)
 
 ```javascript
 import React, { Component } from 'react'
-import store from '../../redux/store'
-import {increase, decrease} from '../../redux/actions/calculator'
+import store from '../../redux/store' // 引入 store
+import {increase, decrease} from '../../redux/actions/calculator' // 引入 action
 export default class Calculator extends Component {
+  // 订阅 Redux 维护的状态的变化
   componentDidMount() {
     store.subscribe(() => {
       this.setState({})
@@ -137,15 +138,16 @@ export default class Calculator extends Component {
   }
   handleIncrease = () => {
     const value = this.node.value
-    store.dispatch(increase(value * 1))
+    store.dispatch(increase(value * 1)) // 使用 store 分发 action
   }
   handleDecrease = () => {
     const value = this.node.value
-    store.dispatch(decrease(value * 1))
+    store.dispatch(decrease(value * 1)) // 使用 store 分发 action
   }
   render() {
     return (
       <div>
+      	{/* 从 store 上获取维护的状态的值 */}
         <h2>当前计算结果：{store.getState()}</h2>
         <input ref={c => this.node = c} type="text" placeholder="操作数"/>&nbsp;&nbsp;
         <button onClick={this.handleIncrease}>加</button>&nbsp;&nbsp;
@@ -156,7 +158,7 @@ export default class Calculator extends Component {
 }
 ```
 
-对操作数的加减运算通过 Store 实例调用 `dispatch()` 函数分发 Action 来完成，Action 的创建调用的也是对应的函数，`value * 1` 是为了把字符串转换成数字。 展示计算结果时调用 `getState()` 函数从 Redux 获取状态值。
+对操作数的加减运算通过 Store 实例调用 `dispatch()` 函数分发 Action 来完成，Action 的创建也是调用对应的函数，`value * 1` 是为了把字符串转换成数字。 展示计算结果时调用 `getState()` 函数从 Redux 获取状态值。
 
 在组件挂载钩子 `componentDidMount` 中调用 Store 的 `subscribe()` 函数进行 Store 状态变化的订阅，当 Store 维护的状态发生变化时会触发监听，然后执行一次无意义的组件状态变更，目的是为了触发 `render()` 函数进行页面重新渲染，否则 Store 中维护的状态值无法更新到页面上。
 
@@ -193,7 +195,7 @@ Redux 和 React 其实没有一毛钱关系，只是刚好名字长得像而已�
 
 ![](https://assets.callback.top/2021-01-21-react-redux-principle.png)
 
-React-Redux 搞出了「容器组件」和「UI 组件」两个概念。「容器组件」是「UI 组件」的父组件，负责与 Redux 打交道，也就是分发 Action 通知 Store 改变状态值和从 Redux 获取状态值。这样「UI 组件」就完全和 Redux 解耦，原本对 Redux 的直接操作通过「容器组件」代理完成。「容器组件」与「UI 组件」通过 `props` 进行交互。使用前先按照库：
+React-Redux 搞出了「容器组件」和「UI 组件」两个概念。「容器组件」是「UI 组件」的父组件，负责与 Redux 打交道，也就是分发 Action 通知 Store 改变状态值和从 Redux 获取状态值。这样「UI 组件」就完全和 Redux 解耦，原本对 Redux 的直接操作通过「容器组件」代理完成。「容器组件」与「UI 组件」通过 `props` 进行交互。使用前先安装库：
 
 ```shell
 yarn add react-redux
@@ -442,3 +444,37 @@ export default connect(
 )(Calculator)
 ```
 
+最后看一下新增的 BookShelf 组件的结构，仅简单做了数据展示：
+
+`src/containers/BookShelf/index.jsx`
+
+```javascript
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import {add} from '../../redux/actions/bookshelf'
+class BookShelf extends Component {
+  render() {
+    return (
+      <div>
+        <ul>
+          {
+            this.props.books.map((book) => {
+              return <li key={book.id}>{book.name} --- {book.auther}</li>
+            })
+          }
+        </ul>
+      </div>
+    )
+  }
+}
+export default connect(
+  state => ({books: state.books}), // 从 state 的 books 上取值，对应 store 中合并 Reducer 时的 key
+  {
+    add
+  }
+)(BookShelf)
+```
+
+# 最后
+
+记住本文开篇的那句话，**Redux 能不用就不用，强行用非死即残**。
