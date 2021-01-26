@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import {BrowserRouter} from 'react-router-dom'
-import Demo from './components/HookDemo'
+import Demo from './components/RenderPropsDemo'
 
 export default class App extends Component {
   render() {
